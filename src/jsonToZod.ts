@@ -1,12 +1,11 @@
 import { format } from "prettier";
 import babelParser from "prettier/parser-babel";
-import { TConfig } from "./getConfig";
+import { getConfig } from "./getConfig";
 
 export const jsonToZod = (
   obj: any,
   name: string = "schema",
-  module?: boolean,
-  zodValueOverrides?: TConfig["zodValueOverrides"]
+  module?: boolean
 ): string => {
   const parse = (obj: any, seen: object[]): string => {
     switch (typeof obj) {
@@ -44,7 +43,9 @@ export const jsonToZod = (
         }
         return `z.object({${Object.entries(obj).map(([k, v]) => {
           const overrideKey = k.toLowerCase();
-          const value = zodValueOverrides?.schema?.[name]?.[overrideKey];
+          const config = getConfig();
+          const value =
+            config?.zodValueOverrides?.schema?.[name]?.[overrideKey];
           return value ? `'${k}':${value}` : `'${k}':${parse(v, seen)}`;
         })}})`;
       case "undefined":
