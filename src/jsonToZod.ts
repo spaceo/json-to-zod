@@ -44,8 +44,7 @@ export const jsonToZod = (
         return `z.object({${Object.entries(obj).map(([k, v]) => {
           const overrideKey = k.toLowerCase();
           const config = getConfig();
-          const value =
-            config?.zodValueOverrides?.schema?.[name]?.[overrideKey];
+          const value = config?.zodValueOverrides?.schema[name][overrideKey];
           return value ? `'${k}':${value}` : `'${k}':${parse(v, seen)}`;
         })}})`;
       case "undefined":
